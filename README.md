@@ -90,6 +90,7 @@
 
 ```bash
 ├── Dockerfile
+├── LICENSE # MIT LICENSE
 ├── README.md # Описание проекта
 ├── notebooks # Python ноутбуки с исследованием моделей и данных LogDet-3K
 │   ├── data_exploration.ipynb
