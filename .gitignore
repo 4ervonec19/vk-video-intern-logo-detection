@@ -1,0 +1,14 @@
+.env
+
+notebooks/yolo/yolo_weigths/best.pt
+notebooks/metric_learning/arcface_weights/best-precision-arcfaceloss-epoch=14-precision_at_1_epoch=0.95.ckpt
+notebooks/metric_learning/arcface_weights/best-checkpoint-arcfaceloss-epoch=14-validation_loss=0.09.ckpt
+
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.DS_Store
+
+commands.txt
