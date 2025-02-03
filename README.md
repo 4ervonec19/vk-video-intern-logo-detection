@@ -36,13 +36,9 @@
 Архитектура разработанного проекта представлена на схемах ```(часть 1 + объединные части 2 и 3).```
 
 
-<div style="text-align: center;">
-  <figure>
-    <img src="./notebooks/figures/drawio/project_architecture_part1.png" alt="Пример изображения" width="625" height="300" style="display: inline-block;">
-    <figcaption>Рисунок 1 - Первая часть архитектуры</figcaption>
-  </figure>
-</div>
 
+<img src="./notebooks/figures/drawio/project_architecture_part1.png" alt="Пример изображения" width="625" height="300" style="display: inline-block;">
+ 
 Рисунок 1 - Первая часть архитектуры
 
 
@@ -53,12 +49,10 @@
 Логотип одежды и человек в худи подаются на вход. ```YOLO``` детектирует рамки и обрезает изображения. На выходе получаются составные части.
 
 
-<div style="text-align: center;">
-  <figure>
-    <img src="./notebooks/figures/drawio/project_architecture_part2.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
-    <figcaption>Рисунок 2 - Финальная часть архитектуры</figcaption>
-  </figure>
-</div>
+
+<img src="./notebooks/figures/drawio/project_architecture_part2.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
+
+Рисунок 2 - Финальная часть архитектуры
 
 Вторая часть архитектуры ```(рис. 2).``` работает с полученными массивами изображений. Первая ветвь позволяет получить предсказания текстов на изображениях с помощью инференса сетей ```PyTesseract, DocTR (Roboflow API) и Easyocr.``` После происходит подсчет метрики на основе ```расстояния Левенштейна (берется максимальное значение из всех пар получившихся предсказаний).``` Вторая ветвь даёт возможность получить ```пары эмбеддингов изображений на основе модели ResNet, предварительно обученной на задаче Metric Learning.``` Вычисляется ```максимальная косинусная мера близости``` по всем парам эмбеддингов. Полученные метрики аггрегируются средним и результат интерпретируется, как вероятность наличия логотипа на изображении ($ prob \in [0; 1]$).
 
