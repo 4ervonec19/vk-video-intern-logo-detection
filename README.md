@@ -62,19 +62,14 @@
 
 Веб-интерфейс приложения представлени на ```рисунках 3 и 4.```
 
-<div style="text-align: center;">
-  <figure>
-    <img src="./notebooks/figures/examples/adidas_vs_adidas.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
-    <figcaption>Рисунок 3 - Пример наличия логотипа</figcaption>
-  </figure>
-</div>
 
-<div style="text-align: center;">
-  <figure>
-    <img src="./notebooks/figures/examples/nike_vs_adidas.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
-    <figcaption>Рисунок 4 - Пример отсутствия логотипа</figcaption>
-  </figure>
-</div>
+<img src="./notebooks/figures/examples/adidas_vs_adidas.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
+
+Рисунок 3 - Пример наличия логотипа
+
+<img src="./notebooks/figures/examples/nike_vs_adidas.png" alt="Пример изображения" width="625" height="400" style="display: inline-block;">
+
+Рисунок 4 - Пример отсутствия логотипа
 
 #### Запуск через ```docker```
 
