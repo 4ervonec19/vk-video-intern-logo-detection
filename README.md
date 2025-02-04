@@ -65,19 +65,19 @@ CREATE TABLE IF NOT EXISTS logo_images (
 );
 
 CREATE TABLE IF NOT EXISTS frame_images (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        frame_image BLOB NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    frame_image BLOB NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS images_processing (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_logo INTEGER,
-  		id_frame INTEGER,
-  		levenstein_metric FLOAT,
-  		cosine_similarity FLOAT,
-  		probability FLOAT,
-  		FOREIGN KEY (id_logo) REFERENCES logo_images(id),
-  		FOREIGN KEY (id_frame) REFERENCES frame_images(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_logo INTEGER,
+    id_frame INTEGER,
+    levenstein_metric FLOAT,
+    cosine_similarity FLOAT,
+    probability FLOAT,
+    FOREIGN KEY (id_logo) REFERENCES logo_images(id),
+    FOREIGN KEY (id_frame) REFERENCES frame_images(id)
   );
 ```
 
