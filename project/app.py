@@ -4,6 +4,7 @@ from inference_text_detection import *
 from inference_text_detection import logo_detection as logo_apply
 from inference_embeddings import *
 import cv2
+import sqlite3
 
 app = Flask(__name__)
 UPLOAD_FOLDER_LOGO = 'logos'
@@ -21,6 +22,53 @@ app.config['PROCESSED_FOLDER_FRAME'] = PROCESSED_FOLDER_FRAME
 
 counter = 0
 
+def get_connection():
+    '''Функция создания и подлкючения к БД для логирования и записи результатов'''
+    
+    connection = sqlite3.connect('logs.db')
+    cursor = connection.cursor()
+    CREATE_LOGO_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS logo_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image BLOB NOT NULL
+        )'''
+    
+    CREATE_FRAME_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS frame_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image BLOB NOT NULL
+        )'''
+    
+    CREATE_PAIRS_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS images_processing (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_logo INTEGER,
+            id_frame INTEGER,
+            levenstein_metric FLOAT,
+            cosine_similarity FLOAT,
+            probability FLOAT,
+            FOREIGN KEY (id_logo) REFERENCES logo_images(id),
+            FOREIGN KEY (id_frame) REFERENCES frame_images(id)
+        )'''
+    
+    cursor.execute(CREATE_LOGO_TABLE_QUERY)
+    cursor.execute(CREATE_FRAME_TABLE_QUERY)
+    cursor.execute(CREATE_PAIRS_TABLE_QUERY)
+
+    connection.commit()
+    return connection
+
+def save_image_to_db(cursor, image_path, table_name):
+    '''Сохранение изображения в таблицу'''
+    with open(image_path, 'rb') as file:
+        blob_data = file.read()
+    cursor.execute(f'INSERT INTO {table_name} (image) VALUES (?)', (blob_data,))
+    return cursor.lastrowid
+
+def save_processing_results(cursor, id_logo, id_frame, levenstein_metric, cosine_similarity, probability):
+    '''Вставка полученных данных в БД'''
+    cursor.execute('''
+        INSERT INTO images_processing (id_logo, id_frame, levenstein_metric, cosine_similarity, probability)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (id_logo, id_frame, levenstein_metric, cosine_similarity, probability))
+    
 @app.route('/', methods=['GET', 'POST'])
 def upload_files():
     global counter
@@ -65,8 +113,22 @@ def upload_files():
         # print(f"Cosine Similarity Metric: {cosine_similarity:.2f}")
         # print(f"Mean value: {mean_result:.2f}")
 
-        print(f"Processed Image 1 Path: {processed_image1_path}")  # Отладочное сообщение
-        print(f"Processed Image 2 Path: {processed_image2_path}")  # Отладочное сообщение
+        # Подключение к БД
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Сохранение изображениия и получение id
+        id_logo = save_image_to_db(cursor, image1_path, 'logo_images')
+        id_frame = save_image_to_db(cursor, image2_path, 'frame_images')
+
+        # Сохранение результатов обработки
+        save_processing_results(cursor, id_logo, id_frame, levenstein_distance, cosine_similarity, mean_result)
+
+        connection.commit()
+        connection.close()
+
+        # print(f"Processed Image 1 Path: {processed_image1_path}")  # Отладочное сообщение
+        # print(f"Processed Image 2 Path: {processed_image2_path}")  # Отладочное сообщение
         
         return render_template('upload.html', 
                                image1=processed_image1_path, 

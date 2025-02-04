@@ -56,6 +56,31 @@
 
 Для отображения в лучшем качестве открыть в формате [drawio](./notebooks/figures/drawio/project_architecture.drawio.html).
 
+* ```UPD:``` дополнительно реализовано логирование данных при помощи ```SQLite (Python lib).``` В отдельные таблицы сохраняются исходные изображения логотипов и кадров. Реализована таблица пар изображений с вычисленными метриками.
+
+```sql
+CREATE TABLE IF NOT EXISTS logo_images (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+  	logo BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS frame_images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        frame_image BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS images_processing (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_logo INTEGER,
+  		id_frame INTEGER,
+  		levenstein_metric FLOAT,
+  		cosine_similarity FLOAT,
+  		probability FLOAT,
+  		FOREIGN KEY (id_logo) REFERENCES logo_images(id),
+  		FOREIGN KEY (id_frame) REFERENCES frame_images(id)
+  );
+```
+
 #### ```Пример работы сервиса```
 
 Веб-интерфейс приложения представлен на ```рисунках 3 и 4.```
@@ -75,13 +100,13 @@
 2. Выполните команду для загрузки образа:
 
     ```sh
-    docker pull 4ervonec19/vk_video_intern
+    docker pull 4ervonec19/vk_video_intern_final
     ```
 
 3. Запустите контейнер:
 
     ```sh
-    docker run -d -p 8002:8002 --name vk_video_intern_container 4ervonec19/vk_video_intern
+    docker run -d -p 8002:8002 --name vk_video_intern_container_final 4ervonec19/vk_video_intern_final
     ```
 
 4. Откройте браузер и перейдите по адресу `http://localhost:8002`, чтобы увидеть работающий проект. Или используйте ```docker logs <HASH>.```
@@ -154,6 +179,7 @@
 │   ├── processed_logos # Сохраненные Output'ы логотипов
 │   │   ├── processed_5_logo.jpg
 │   │   └── processed_7_logo.jpg
+│   ├── logs.db # База данных с таблицами, cодержащими как изображения, так и метрики (Создаётся автоматически через CREATE) 
 │   └── templates # Frontend
 │       └── upload.html
 ├── references # Ссылки на датасет
